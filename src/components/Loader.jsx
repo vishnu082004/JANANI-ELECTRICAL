@@ -1,0 +1,1 @@
+export default function Loader({ label = 'Loading Janani Electricals' }) { return <div className="site-loader" role="status"><span className="site-loader-mark" aria-hidden="true">J</span><span>{label}</span></div> }

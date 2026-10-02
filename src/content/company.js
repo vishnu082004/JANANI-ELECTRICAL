@@ -1,0 +1,5 @@
+export const companyAddress = 'No: 2/1, Bharathi Street, Vallalar Nagar, (Raja’s Garden 1st Street), Chettiyaragaram, Chennai – 600 095.'
+export const phone = '+91 6369040966'
+export const contactEmail = 'sales@jananielectricals.com'
+export const alternateContactEmail = 'c_thanikai2004@yahoo.co.in'
+export const registeredAddress = 'TS 71/1, Industrial Estate, Ekkaduthangal, Guindy, Chennai – 600 032.'

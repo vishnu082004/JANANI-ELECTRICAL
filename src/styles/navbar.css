@@ -1,0 +1,121 @@
+.site-header {
+  position: sticky;
+  z-index: 50;
+  top: 0;
+  background: rgb(255 253 249 / 96%);
+  border-bottom: 1px solid rgb(247 148 29 / 18%);
+  box-shadow: 0 7px 26px rgb(16 48 82 / 9%);
+  backdrop-filter: blur(14px)
+}
+
+.main-header-inner {
+  display: flex;
+  min-height: 86px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px
+}
+
+.brand {
+  display: flex;
+  width: 254px;
+  align-items: center;
+  flex: 0 0 auto
+}
+
+.brand img {
+  width: 100%;
+  height: auto
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 27px)
+}
+
+.site-nav>a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding-block: 32px;
+  color: #28415d;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color .2s
+}
+
+.site-nav>a::after {
+  position: absolute;
+  right: 0;
+  bottom: 22px;
+  left: 0;
+  height: 2px;
+  background: var(--gold);
+  content: '';
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .22s
+}
+
+.site-nav>a:hover,
+.site-nav>a.active {
+  color: var(--blue)
+}
+
+.site-nav>a:hover::after,
+.site-nav>a.active::after {
+  transform: scaleX(1)
+}
+
+.site-nav>a.nav-contact {
+  min-height: 45px;
+  padding: 0 17px;
+  border-radius: 4px;
+  color: #fff;
+  background: var(--blue)
+}
+
+.site-nav>a.nav-contact::after {
+  display: none
+}
+
+.site-nav>a.nav-contact:hover {
+  color: #fff;
+  background: var(--navy-deep)
+}
+
+.menu-toggle {
+  display: none
+}
+
+.brand {
+  height: 72px;
+  overflow: hidden
+}
+
+.brand img {
+  height: 100%;
+  object-fit: cover;
+  object-position: center
+}
+
+.site-nav>a:not(.nav-contact):hover,
+.site-nav>a:not(.nav-contact).active {
+  color: var(--orange-deep)
+}
+
+.site-nav>a.nav-contact {
+  color: #142d47;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffb340, var(--orange));
+  box-shadow: 0 8px 20px rgb(247 148 29 / 30%)
+}
+
+.site-nav>a.nav-contact:hover {
+  color: #142d47;
+  background: #ffad3b
+}
