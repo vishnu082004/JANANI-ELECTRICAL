@@ -1,5 +1,42 @@
-node_modules
-dist
-dist-ssr
+# Dependencies
+node_modules/
+
+# Vite / build output
+dist/
+dist-ssr/
+.vite/
+
+# Local environment and machine-specific config
+.env
+.env.*
+!.env.example
 *.local
+
+# Logs and diagnostic output
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Test and coverage output
+coverage/
+*.lcov
+playwright-report/
+test-results/
+
+# Editor and IDE files
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating system files
 .DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
