@@ -8,11 +8,14 @@
   }
 
   .brand {
-    width: 215px
+    width: 160px
   }
 
   .site-nav {
-    gap: 13px
+    left: 0;
+    right: 0;
+    gap: 13px;
+    transform: none
   }
 
   .site-nav>a {
@@ -177,6 +180,21 @@
   .video-card {
     width: min(100%, 520px);
     justify-self: center
+  }
+}
+
+@media(max-width:820px) {
+  .site-nav {
+    bottom: auto;
+    text-align: center
+  }
+
+  .site-nav>a {
+    justify-content: center
+  }
+
+  .site-nav>a.nav-contact {
+    align-self: center
   }
 }
 

@@ -115,7 +115,6 @@ function Header({ currentPage }) {
 const pageHeroImages = {
   'About Us': 'Untitled-design-4.webp',
   Products: 'Lroi-18.webp',
-  'Product Gallery': 'Lroi-16.webp',
   Blog: 'Untitled-design-5.webp',
   'Our Blog': 'Untitled-design-1.webp',
   'Contact Us': 'Untitled-design-5.webp',
@@ -331,7 +330,7 @@ function HomePage() {
         <div className="container home-hero-grid">
           <Reveal direction="left" className="hero-copy">
             <span className="eyebrow">Manufacturing excellence since 2000</span>
-            <h1>Powering industries with <em>reliable</em> electrical solutions</h1>
+            <h1><span>Powering industries</span><span>with reliable</span><em>electrical solutions</em></h1>
             <p>Trusted experts in designing and manufacturing high-quality electrical control panels, bus ducts, and switchgear assemblies for diverse industrial needs.</p>
             <div className="hero-actions"><a className="button button-primary" href="/about-us/">About us <Arrow /></a><a className="button button-outline" href="/contact-us/">Get in touch <Arrow diagonal /></a></div>
             <div className="hero-proof"><span className="proof-icon"><Icon name="check" /></span><span><strong>CPRI tested</strong><small>Quality you can rely on</small></span><span className="proof-divider" /><span><strong>ISO 9001:2015</strong><small>Certified quality systems</small></span></div>
@@ -423,12 +422,20 @@ function AboutPage() {
 function ProductsPage() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('All products')
+  const [selectedImage, setSelectedImage] = useState(null)
   const categories = ['All products', ...new Set(products.map((product) => product.category))]
   const filteredProducts = products.filter((product) => {
     const matchesCategory = category === 'All products' || product.category === category
     const matchesQuery = `${product.name} ${product.description}`.toLowerCase().includes(query.trim().toLowerCase())
     return matchesCategory && matchesQuery
   })
+  useEffect(() => {
+    if (!selectedImage) return undefined
+    function onKeyDown(event) { if (event.key === 'Escape') setSelectedImage(null) }
+    document.addEventListener('keydown', onKeyDown)
+    document.body.classList.add('modal-open')
+    return () => { document.removeEventListener('keydown', onKeyDown); document.body.classList.remove('modal-open') }
+  }, [selectedImage])
   return (
     <>
       <PageBanner title="Products" crumb="Product Detail" />
@@ -439,29 +446,26 @@ function ProductsPage() {
           <div className="product-filters" role="group" aria-label="Filter products by category">{categories.map((item) => <button type="button" key={item} className={category === item ? 'active' : ''} aria-pressed={category === item} onClick={() => setCategory(item)}>{item}</button>)}</div>
           <p className="product-result-count" aria-live="polite">Showing {filteredProducts.length} of {products.length} products</p>
         </div>
-        <div className="product-detail-list">
+        <div className="product-detail-list product-catalog-grid" aria-live="polite">
+        {filteredProducts.map((product, index) => (
+          <article className="product-detail product-catalog-card" key={product.name}>
+            <button className="product-detail-image" type="button" onClick={() => setSelectedImage(product)} aria-label={`View larger image of ${product.name}`}>
+              <img src={media(product.image)} alt={product.name} loading="lazy" />
+              <span className="product-detail-number">{String(index + 1).padStart(2, '0')}</span>
+              <span className="product-image-hint">Tap to enlarge <Arrow diagonal /></span>
+            </button>
+            <div className="product-detail-copy">
+              <span className="eyebrow">{product.category}</span>
+              <h2>{product.name}</h2>
+              <p>{product.description}</p>
+              <a className="text-link" href={`/contact-us/?product=${encodeURIComponent(product.name)}`}>Enquire about this product <Arrow /></a>
+            </div>
+          </article>
+        ))}
         {filteredProducts.length === 0 && <div className="product-empty"><h2>No matching products</h2><p>Try another search or clear the selected category.</p><button type="button" className="button button-outline" onClick={() => { setQuery(''); setCategory('All products') }}>Show all products</button></div>}
         </div>
       </div></section>
-      <CallToAction />
-    </>
-  )
-}
-
-function GalleryPage() {
-  const [selected, setSelected] = useState(null)
-  useEffect(() => {
-    if (!selected) return undefined
-    function onKeyDown(event) { if (event.key === 'Escape') setSelected(null) }
-    document.addEventListener('keydown', onKeyDown)
-    document.body.classList.add('modal-open')
-    return () => { document.removeEventListener('keydown', onKeyDown); document.body.classList.remove('modal-open') }
-  }, [selected])
-  return (
-    <>
-      <PageBanner title="Product Gallery" />
-      <section className="section-space gallery-section"><div className="container"><SectionHeading eyebrow="Our work" title="Product gallery" text="Explore electrical products manufactured and assembled by Janani Electricals." /><div className="gallery-grid">{products.map((product, index) => <Reveal key={product.name} delay={(index % 4) * 60}><button className="gallery-card" type="button" onClick={() => setSelected(product)} aria-label={`View ${product.name}`}><img src={media(product.image)} alt={product.name} loading="lazy" /><span className="gallery-caption"><span>{product.name}</span><Arrow diagonal /></span></button></Reveal>)}</div></div></section>
-      {selected && <div className="lightbox" role="dialog" aria-modal="true" aria-label={selected.name} onClick={() => setSelected(null)}><button className="lightbox-close" type="button" aria-label="Close image" onClick={() => setSelected(null)}>&times;</button><div className="lightbox-content" onClick={(event) => event.stopPropagation()}><img src={media(selected.image)} alt={selected.name} /><h2>{selected.name}</h2></div></div>}
+      {selectedImage && <div className="lightbox" role="dialog" aria-modal="true" aria-label={`Image of ${selectedImage.name}`} onClick={() => setSelectedImage(null)}><button className="lightbox-close" type="button" aria-label="Close image" onClick={() => setSelectedImage(null)}>&times;</button><div className="lightbox-content" onClick={(event) => event.stopPropagation()}><img src={media(selectedImage.image)} alt={selectedImage.name} /><h2>{selectedImage.name}</h2></div></div>}
       <CallToAction />
     </>
   )
@@ -579,7 +583,7 @@ function Footer() {
         </div>
         <div className="footer-links">
           <h2>Quick links</h2>
-          {navLinks.filter((link) => link.href !== '/product-gallery/').map((link) => <a key={link.href} href={link.href}>{link.label}<Arrow diagonal /></a>)}
+          {navLinks.map((link) => <a key={link.href} href={link.href}>{link.label}<Arrow diagonal /></a>)}
           <a href="/privacy-policy/">Privacy Policy<Arrow diagonal /></a>
         </div>
         <div className="footer-contact">
@@ -600,7 +604,11 @@ function Footer() {
   )
 }
 function getRoute() {
-  const path = window.location.pathname.replace(/\/{2,}/g, '/').replace(/\/?$/, '/')
+  let path = window.location.pathname.replace(/\/{2,}/g, '/').replace(/\/?$/, '/')
+  if (path === '/product-gallery/') {
+    window.history.replaceState(null, '', '/products/')
+    path = '/products/'
+  }
   const post = blogPosts.find((item) => path === `/${item.slug}/`)
   return { path, post }
 }
@@ -611,7 +619,6 @@ function App() {
     '/': 'Home',
     '/about-us/': 'About Us',
     '/products/': 'Products',
-    '/product-gallery/': 'Product Gallery',
     '/blogs/': 'Blogs',
     '/contact-us/': 'Contact Us',
     '/privacy-policy/': 'Privacy Policy',
@@ -625,12 +632,11 @@ function App() {
   else if (path === '/') page = <HomePage />
   else if (path === '/about-us/') page = <AboutPage />
   else if (path === '/products/') page = <ProductsPage />
-  else if (path === '/product-gallery/') page = <GalleryPage />
   else if (path === '/blogs/') page = <BlogsPage />
   else if (path === '/contact-us/') page = <ContactPage />
   else if (path === '/privacy-policy/') page = <PrivacyPolicyPage />
   else page = <NotFound />
-  return <><Header currentPage={path} /><main>{page}</main><Footer /><a className="floating-whatsapp" href="https://wa.me/916369040966" target="_blank" rel="noopener noreferrer" aria-label="Chat with Janani Electricals on WhatsApp at +91 6369040966"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16.04 3.2A12.7 12.7 0 0 0 5.12 22.38L3.4 28.65l6.42-1.68A12.7 12.7 0 1 0 16.04 3.2Zm0 23.1a10.3 10.3 0 0 1-5.25-1.44l-.38-.23-3.81 1 1.02-3.71-.25-.39a10.34 10.34 0 1 1 8.67 4.77Zm5.67-7.74c-.31-.16-1.84-.91-2.12-1.02-.29-.1-.49-.16-.7.16-.2.31-.8 1.02-.98 1.23-.18.2-.36.23-.67.08-.31-.16-1.31-.49-2.49-1.54-.92-.82-1.54-1.84-1.72-2.15-.18-.31-.02-.48.14-.63.14-.14.31-.36.46-.54.15-.18.2-.31.31-.52.1-.2.05-.39-.03-.54-.08-.16-.7-1.69-.95-2.31-.25-.6-.5-.52-.7-.53h-.59c-.2 0-.54.08-.82.39-.28.31-1.08 1.05-1.08 2.56s1.1 2.97 1.25 3.18c.15.2 2.17 3.31 5.25 4.64.73.32 1.3.51 1.74.65.73.23 1.39.2 1.91.12.58-.09 1.84-.75 2.1-1.48.26-.72.26-1.33.18-1.46-.08-.13-.28-.2-.59-.36Z"/></svg></a></>
+  return <><Header currentPage={path.replace('/product-gallery/', '/products/')} /><main>{page}</main><Footer /><a className="floating-whatsapp" href="https://wa.me/916369040966" target="_blank" rel="noopener noreferrer" aria-label="Chat with Janani Electricals on WhatsApp at +91 6369040966"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16.04 3.2A12.7 12.7 0 0 0 5.12 22.38L3.4 28.65l6.42-1.68A12.7 12.7 0 1 0 16.04 3.2Zm0 23.1a10.3 10.3 0 0 1-5.25-1.44l-.38-.23-3.81 1 1.02-3.71-.25-.39a10.34 10.34 0 1 1 8.67 4.77Zm5.67-7.74c-.31-.16-1.84-.91-2.12-1.02-.29-.1-.49-.16-.7.16-.2.31-.8 1.02-.98 1.23-.18.2-.36.23-.67.08-.31-.16-1.31-.49-2.49-1.54-.92-.82-1.54-1.84-1.72-2.15-.18-.31-.02-.48.14-.63.14-.14.31-.36.46-.54.15-.18.2-.31.31-.52.1-.2.05-.39-.03-.54-.08-.16-.7-1.69-.95-2.31-.25-.6-.5-.52-.7-.53h-.59c-.2 0-.54.08-.82.39-.28.31-1.08 1.05-1.08 2.56s1.1 2.97 1.25 3.18c.15.2 2.17 3.31 5.25 4.64.73.32 1.3.51 1.74.65.73.23 1.39.2 1.91.12.58-.09 1.84-.75 2.1-1.48.26-.72.26-1.33.18-1.46-.08-.13-.28-.2-.59-.36Z"/></svg></a></>
 }
 
 export default App

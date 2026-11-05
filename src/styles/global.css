@@ -614,6 +614,7 @@ a {
 .breadcrumbs {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   color: #c4d6e8;
   font-size: 11px

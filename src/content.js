@@ -16,7 +16,6 @@ export const navLinks = [
   { label: 'About Us', href: '/about-us/' },
   { label: 'Products', href: '/products/' },
   { label: 'Blogs', href: '/blogs/' },
-  { label: 'Product Gallery', href: '/product-gallery/' },
   { label: 'Contact Us', href: '/contact-us/' },
 ]
 
